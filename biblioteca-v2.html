@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi biblioteca</title>
+<style>
+:root{--bg:#eef0ee;--tx:#1f2a2e;--ac:#3f6b73;--sf:#ffffff;
+--mu:color-mix(in srgb,var(--tx) 58%,var(--bg));--ln:color-mix(in srgb,var(--tx) 14%,var(--bg));
+box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,.nm,.fb,.logo{font-family:"Iowan Old Style",Georgia,serif}
+h2{font-size:1.25rem;font-weight:600;margin:0}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.btn{font:inherit;font-size:.9rem;background:none;color:var(--tx);border:1px solid var(--ln);padding:8px 14px;cursor:pointer;border-radius:0}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--bg)}
+.btn:hover{opacity:.8}
+
+/* Estructura */
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+nav{position:sticky;top:0;height:100vh;padding:26px 14px;background:var(--sf);border-right:1px solid var(--ln);display:flex;flex-direction:column;gap:2px}
+.logo{font-size:1.35rem;font-weight:600;padding:0 12px 22px}
+nav a{display:flex;justify-content:space-between;padding:9px 12px;color:inherit;text-decoration:none;font-size:.95rem}
+nav a:hover{background:color-mix(in srgb,var(--ac) 8%,var(--sf))}
+nav a[aria-current]{background:color-mix(in srgb,var(--ac) 16%,var(--sf));font-weight:600}
+.n{color:var(--mu);font-size:.82rem;font-weight:400}
+.sp{flex:1}
+nav .btn{margin-top:8px}
+main{padding:0 28px 60px;min-width:0}
+
+/* Barra de búsqueda */
+.bar{position:sticky;top:0;z-index:2;background:var(--bg);display:flex;gap:8px;padding:18px 0 12px;border-bottom:1px solid var(--ln);margin-bottom:22px}
+input,select,textarea{font:inherit;font-size:.92rem;color:var(--tx);background:var(--sf);border:1px solid var(--ln);padding:8px 10px;border-radius:0}
+.bar input{flex:1;min-width:0}
+.vt{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 14px}
+.vt a,.shh a{color:var(--mu);font-size:.85rem}
+.empty{color:var(--mu);margin:0;grid-column:1/-1}
+
+/* Bento */
+#bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:150px;grid-auto-flow:dense;gap:10px;margin-bottom:34px}
+.b1{grid-column:span 2;grid-row:span 2}
+.b4{grid-column:span 2}
+#bento .card{position:relative;padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--sf);cursor:pointer;color:#fff;text-align:left;font:inherit}
+#bento img,#bento .fb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#bento img{transition:transform .3s}
+#bento .card:hover img{transform:scale(1.04)}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:30px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));display:flex;flex-direction:column}
+.cap b{font-family:"Iowan Old Style",Georgia,serif;font-weight:600;line-height:1.25}
+.b1 .cap b{font-size:1.35rem}
+.cap small{opacity:.8}
+
+/* Estantes */
+.shh{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 8px}
+.shelf{display:flex;gap:14px;align-items:flex-end;overflow-x:auto;padding:6px 16px 0;margin-bottom:30px;border-bottom:12px solid color-mix(in srgb,var(--ac) 24%,var(--bg));box-shadow:0 12px 14px -10px rgba(0,0,0,.3);scrollbar-width:thin}
+.shelf .card{flex:none;width:116px;transition:transform .15s}
+.shelf .card:hover{transform:translateY(-4px)}
+
+/* Tarjetas */
+.card{background:none;border:0;padding:0;text-align:left;color:inherit;font:inherit;cursor:pointer}
+.ph{position:relative;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:var(--sf)}
+.ph img,.ph .fb{width:100%;height:100%;object-fit:cover;display:block}
+.fb{display:grid;place-items:center;font-size:2.6rem;font-weight:600;color:#fff}
+.chip{position:absolute;left:0;top:10px;padding:2px 8px;color:#fff;font-size:.74rem;font-style:normal}
+.nm{display:block;margin-top:8px;font-weight:600;line-height:1.25}
+.sub{display:block;color:var(--mu);font-size:.82rem}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:22px 14px}
+
+/* Diálogos */
+dialog{border:1px solid var(--ln);background:var(--bg);color:var(--tx);padding:22px;width:min(440px,92vw);border-radius:0}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+label{display:block;margin-top:12px;font-size:.85rem;color:var(--mu)}
+label input,label select,label textarea{display:block;width:100%;margin-top:4px}
+textarea{resize:vertical;min-height:70px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+input[type=color]{padding:0;height:36px;cursor:pointer}
+.sep{border-top:1px solid var(--ln);margin-top:20px;padding-top:4px}
+.hint{font-size:.82rem;color:var(--mu);margin:6px 0 0}
+
+@media(max-width:760px){
+ .app{grid-template-columns:1fr}
+ nav{height:54px;flex-direction:row;align-items:center;overflow-x:auto;padding:0 10px;border-right:0;border-bottom:1px solid var(--ln);z-index:3;gap:4px}
+ .logo,.sp{display:none}
+ nav a,nav .btn{flex:none;white-space:nowrap;gap:6px;margin-top:0}
+ main{padding:0 16px 50px}
+ .bar{top:54px}
+ #bento{grid-template-columns:repeat(2,1fr);grid-auto-rows:130px}
+}
+@media(prefers-reduced-motion:reduce){#bento img,.shelf .card{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+ <nav>
+  <div class="logo">Mi biblioteca</div>
+  <a href="#inicio" data-v="inicio">Biblioteca</a>
+  <a href="#proximos" data-v="proximos">Próximos a leer <span class="n"></span></a>
+  <a href="#leyendo" data-v="leyendo">Leyendo <span class="n"></span></a>
+  <a href="#terminados" data-v="terminados">Terminados <span class="n"></span></a>
+  <a href="#favoritos" data-v="favoritos">Favoritos <span class="n"></span></a>
+  <a href="#todos" data-v="todos">Todos <span class="n"></span></a>
+  <div class="sp"></div>
+  <button class="btn pri" id="add">Agregar título</button>
+  <button class="btn" id="cfg">Ajustes</button>
+ </nav>
+
+ <main>
+  <div class="bar">
+   <input id="q" type="search" placeholder="Buscar por título" aria-label="Buscar">
+   <select id="ft" aria-label="Tipo"></select>
+  </div>
+  <div id="view"></div>
+ </main>
+</div>
+
+<dialog id="ed">
+ <form id="f">
+  <h2 id="edt">Agregar título</h2>
+  <label>Título<input id="t" required placeholder="Ej. Solo Leveling"></label>
+  <div class="two">
+   <label>Tipo<select id="ty"></select></label>
+   <label>Estado<select id="st"></select></label>
+  </div>
+  <label>Link de la portada<input id="cv" type="url" placeholder="https://..."></label>
+  <div class="two">
+   <label>Progreso<input id="pg" placeholder="Ej. Cap. 45"></label>
+   <label>Nota (0 a 10)<input id="sc" type="number" min="0" max="10" step="0.5"></label>
+  </div>
+  <label>Reseña o comentario<textarea id="nt"></textarea></label>
+  <div class="row">
+   <button class="btn pri" type="submit">Guardar</button>
+   <button class="btn" type="button" id="top">Poner primero en por leer</button>
+   <button class="btn" type="button" id="del">Eliminar</button>
+   <button class="btn" type="button" data-close>Cancelar</button>
+  </div>
+ </form>
+</dialog>
+
+<dialog id="cf">
+ <h2>Ajustes</h2>
+ <p class="hint">Colores</p>
+ <div class="two">
+  <label>Fondo<input type="color" id="c-bg"></label>
+  <label>Texto<input type="color" id="c-tx"></label>
+  <label>Acento y repisas<input type="color" id="c-ac"></label>
+  <label>Tarjetas y menú<input type="color" id="c-sf"></label>
+ </div>
+ <div class="row" id="pre"></div>
+ <div class="sep">
+  <p class="hint">Respaldo de tu biblioteca</p>
+  <div class="row"><button class="btn" id="exp">Exportar .json</button></div>
+  <label>Al importar
+   <select id="mode"><option value="mrg">Combinar con lo que ya tengo</option><option value="rep">Reemplazar todo</option></select>
+  </label>
+  <label>Importar .json<input type="file" id="imp" accept=".json,application/json"></label>
+ </div>
+ <div class="row"><button class="btn pri" data-close>Listo</button></div>
+</dialog>
+
+<script>
+const $=s=>document.querySelector(s);
+const KI='bib.items',KT='bib.theme';
+const ST={want:['Quiero leer','#4a78a8'],reading:['Leyendo','#a97f22'],done:['Leído','#4f8a5b'],unread:['No leído','#6f7478']};
+const TY=['Manhwa','Manga','Anime','Novela','Libro','Otro'];
+const PRE={
+ Niebla:{bg:'#eef0ee',tx:'#1f2a2e',ac:'#3f6b73',sf:'#ffffff'},
+ Noche:{bg:'#15191b',tx:'#e5e8e9',ac:'#8fb3b9',sf:'#20272a'},
+ Lavanda:{bg:'#f1eef5',tx:'#2b2433',ac:'#7a5fa0',sf:'#ffffff'},
+ Rosa:{bg:'#f6eceb',tx:'#3a2626',ac:'#a8566a',sf:'#fffaf9'}
+};
+const fav=i=>i.sc!==''&&i.sc!=null&&Number(i.sc)>=8;
+const V={
+ inicio:{t:'Biblioteca'},
+ proximos:{t:'Próximos a leer',f:i=>i.st==='want',o:(a,b)=>(b.top||0)-(a.top||0)},
+ leyendo:{t:'Leyendo',f:i=>i.st==='reading'},
+ terminados:{t:'Terminados',f:i=>i.st==='done'},
+ favoritos:{t:'Favoritos (nota 8 o más)',f:fav,o:(a,b)=>b.sc-a.sc},
+ todos:{t:'Todos los títulos',f:()=>true}
+};
+const SHELVES=[['reading','Leyendo','leyendo'],['want','Próximos a leer','proximos'],['done','Terminados','terminados'],['unread','Sin empezar','todos']];
+
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('No se pudo guardar en este navegador. Exporta un respaldo desde Ajustes.')}}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+let items=load(KI,[]);
+let theme=load(KT,null)||(matchMedia('(prefers-color-scheme: dark)').matches?PRE.Noche:PRE.Niebla);
+let editing=null;
+
+function applyTheme(){
+ const r=document.documentElement.style;
+ r.setProperty('--bg',theme.bg);r.setProperty('--tx',theme.tx);r.setProperty('--ac',theme.ac);r.setProperty('--sf',theme.sf);
+ ['bg','tx','ac','sf'].forEach(k=>$('#c-'+k).value=theme[k]);
+}
+function fb(t){
+ const d=document.createElement('div');d.className='fb';
+ let h=0;for(const c of t)h=(h*31+c.charCodeAt(0))%360;
+ d.style.background='hsl('+h+',22%,38%)';
+ d.textContent=(t.trim()[0]||'?').toUpperCase();
+ return d;
+}
+const img=i=>i.cv?'<img src="'+esc(i.cv)+'" alt="'+esc(i.t)+'" loading="lazy" onerror="this.replaceWith(fb(this.alt))">':fb(i.t).outerHTML;
+const byTitle=(a,b)=>a.t.localeCompare(b.t);
+
+const gridCard=i=>'<button class="card" data-id="'+i.id+'"><div class="ph">'+img(i)+'<em class="chip" style="background:'+ST[i.st][1]+'">'+ST[i.st][0]+'</em></div>'+
+ '<span class="nm">'+esc(i.t)+'</span><span class="sub">'+esc(i.ty)+(i.pg?' · '+esc(i.pg):'')+(i.sc!==''&&i.sc!=null?' · '+esc(i.sc)+'/10':'')+'</span></button>';
+const shelfCard=i=>'<button class="card" data-id="'+i.id+'" title="'+esc(i.t)+'" aria-label="'+esc(i.t)+'"><div class="ph">'+img(i)+'</div></button>';
+
+function render(){
+ const v=(location.hash.slice(1) in V)?location.hash.slice(1):'inicio';
+ const q=$('#q').value.trim().toLowerCase(),ft=$('#ft').value;
+ const vis=items.filter(i=>(!q||i.t.toLowerCase().includes(q))&&(!ft||i.ty===ft));
+
+ document.querySelectorAll('nav a').forEach(a=>{
+  const k=a.dataset.v;
+  a.toggleAttribute('aria-current',k===v);
+  const n=a.querySelector('.n');
+  if(n)n.textContent=items.filter(V[k].f).length;
+ });
+
+ let h='';
+ if(v==='inicio'){
+  const want=vis.filter(i=>i.st==='want').sort(V.proximos.o).slice(0,5);
+  h+='<div id="bento">'+(want.length?want.map((i,n)=>
+   '<button class="card b'+(n+1)+'" data-id="'+i.id+'">'+img(i)+'<span class="cap"><b>'+esc(i.t)+'</b><small>'+esc(i.ty)+'</small></span></button>').join('')
+   :'<p class="empty">Aún no hay títulos por leer. Agrega uno y márcalo como “Quiero leer”.</p>')+'</div>';
+  let any=false;
+  SHELVES.forEach(([st,label,key])=>{
+   const l=vis.filter(i=>i.st===st).sort(st==='want'?V.proximos.o:byTitle);
+   if(!l.length)return;any=true;
+   h+='<div class="shh"><h2>'+label+'</h2><a href="#'+key+'">Ver todo</a></div><div class="shelf">'+l.slice(0,14).map(shelfCard).join('')+'</div>';
+  });
+  if(!any)h+='<p class="empty">'+(items.length?'No hay resultados con esa búsqueda.':'Tu biblioteca está vacía. Toca “Agregar título” para empezar.')+'</p>';
+ }else{
+  const l=vis.filter(V[v].f).sort(V[v].o||byTitle);
+  h+='<div class="vt"><h2>'+V[v].t+' ('+l.length+')</h2></div><div id="grid">'+
+   (l.length?l.map(gridCard).join(''):'<p class="empty">'+(items.length?'No hay títulos en esta sección.':'Tu biblioteca está vacía. Toca “Agregar título” para empezar.')+'</p>')+'</div>';
+ }
+ $('#view').innerHTML=h;
+}
+const persist=()=>{save(KI,items);render()};
+
+function openEd(id){
+ editing=id?items.find(i=>i.id===id):null;
+ const i=editing||{t:'',ty:'Manhwa',st:'want',cv:'',pg:'',sc:'',nt:''};
+ $('#edt').textContent=editing?'Editar título':'Agregar título';
+ $('#t').value=i.t;$('#ty').value=i.ty;$('#st').value=i.st;$('#cv').value=i.cv||'';
+ $('#pg').value=i.pg||'';$('#sc').value=i.sc??'';$('#nt').value=i.nt||'';
+ $('#del').style.display=editing?'':'none';
+ $('#ed').showModal();
+}
+const readForm=()=>({t:$('#t').value.trim(),ty:$('#ty').value,st:$('#st').value,cv:$('#cv').value.trim(),pg:$('#pg').value.trim(),sc:$('#sc').value,nt:$('#nt').value.trim()});
+$('#f').onsubmit=e=>{
+ e.preventDefault();
+ const d=readForm();
+ if(editing)Object.assign(editing,d);else items.push({id:uid(),top:Date.now(),...d});
+ persist();$('#ed').close();
+};
+$('#top').onclick=()=>{
+ const d=readForm();if(!d.t){$('#t').reportValidity();return}
+ d.st='want';
+ if(editing)Object.assign(editing,d,{top:Date.now()});else items.push({id:uid(),top:Date.now(),...d});
+ persist();$('#ed').close();
+};
+$('#del').onclick=()=>{
+ if(editing&&confirm('¿Eliminar “'+editing.t+'”?')){items=items.filter(i=>i!==editing);persist();$('#ed').close()}
+};
+document.addEventListener('click',e=>{
+ const c=e.target.closest('.card[data-id]');if(c)openEd(c.dataset.id);
+ if(e.target.closest('[data-close]'))e.target.closest('dialog').close();
+});
+$('#add').onclick=()=>openEd(null);
+$('#cfg').onclick=()=>$('#cf').showModal();
+
+/* Colores */
+['bg','tx','ac','sf'].forEach(k=>$('#c-'+k).oninput=e=>{theme={...theme,[k]:e.target.value};save(KT,theme);applyTheme()});
+$('#pre').innerHTML=Object.keys(PRE).map(n=>'<button class="btn" data-p="'+n+'">'+n+'</button>').join('');
+$('#pre').onclick=e=>{const n=e.target.dataset.p;if(n){theme={...PRE[n]};save(KT,theme);applyTheme()}};
+
+/* Exportar e importar */
+$('#exp').onclick=()=>{
+ const b=new Blob([JSON.stringify({v:1,items,theme},null,1)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='biblioteca.json';a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+};
+$('#imp').onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{
+  const d=JSON.parse(await f.text());
+  if(!Array.isArray(d.items))throw 0;
+  const ok=d.items.filter(i=>i&&i.id&&i.t&&ST[i.st]);
+  if($('#mode').value==='rep')items=ok;
+  else{const m=new Map(items.map(i=>[i.id,i]));ok.forEach(i=>m.set(i.id,i));items=[...m.values()]}
+  if(d.theme&&d.theme.bg){theme=d.theme;save(KT,theme);applyTheme()}
+  persist();alert('Se importaron '+ok.length+' títulos.');
+ }catch(_){alert('Ese archivo no parece una biblioteca válida (.json).')}
+ e.target.value='';
+};
+
+/* Inicio */
+$('#ty').innerHTML=TY.map(t=>'<option>'+t+'</option>').join('');
+$('#st').innerHTML=Object.entries(ST).map(([k,v])=>'<option value="'+k+'">'+v[0]+'</option>').join('');
+$('#ft').innerHTML='<option value="">Todos los tipos</option>'+TY.map(t=>'<option>'+t+'</option>').join('');
+['q','ft'].forEach(k=>$('#'+k).oninput=render);
+addEventListener('hashchange',()=>{render();scrollTo(0,0)});
+applyTheme();render();
+</script>
+</body>
+</html>
